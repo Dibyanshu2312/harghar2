@@ -362,7 +362,12 @@ const Dashboard = () => {
   // Handle dashboard selection change
   const handleDashboardSelect = useCallback((e) => {
     const value = e.target.value;
-    navigate(value === "student" ? "/" : "/anganvadi-dashboard");
+    console.log('Dashboard selection:', value); // Debug log
+    if (value === "student") {
+      navigate("/dashboard");
+    } else if (value === "anganvadi") {
+      navigate("/anganvadi-dashboard");
+    }
   }, [navigate]);
 
   return (
@@ -433,14 +438,29 @@ const Dashboard = () => {
           // Desktop layout - vertical sidebar
           <>
             <div style={{ padding: "0 20px", marginBottom: 24 }}>
-              <label htmlFor="dashboard-select" style={{ color: "#fff", fontSize: 14, marginBottom: 6, display: "block" }}>
+              <label htmlFor="dashboard-select" style={{ 
+                color: "#fff", 
+                fontSize: 14, 
+                marginBottom: 8, 
+                display: "block",
+                fontWeight: "bold"
+              }}>
                 Choose Dashboard
               </label>
               <select
                 id="dashboard-select"
                 onChange={handleDashboardSelect}
-                defaultValue="student"
-                style={{ width: "100%", padding: 12, borderRadius: 8 }}
+                value="student"
+                style={{ 
+                  width: "100%", 
+                  padding: 12, 
+                  borderRadius: 8,
+                  border: "1px solid #ddd",
+                  fontSize: 16,
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  cursor: "pointer"
+                }}
               >
                 <option value="student">Student Dashboard</option>
                 <option value="anganvadi">Anganvadi Dashboard</option>
@@ -486,13 +506,17 @@ const Dashboard = () => {
               <select
                 id="mobile-dashboard-select"
                 onChange={handleDashboardSelect}
-                defaultValue="student"
+                value="student"
                 style={{ 
                   width: "100%", 
                   padding: 12, 
                   borderRadius: 8,
                   border: "1px solid #ddd",
-                  fontSize: 16
+                  fontSize: 16,
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  cursor: "pointer"
                 }}
               >
                 <option value="student">Student Dashboard</option>

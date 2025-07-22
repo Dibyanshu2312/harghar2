@@ -77,27 +77,33 @@ const SidebarButton = ({ icon, label, onClick, active = false }) => (
   </button>
 );
 
-const StatCard = ({ label, value, icon }) => (
+const StatCard = ({ label, value, icon, isMobile }) => (
   <div
     style={{
       background: "white",
       borderRadius: 16,
-      padding: 32,
+      padding: isMobile ? 16 : 32,
       boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-      minWidth: 180,
+      minWidth: isMobile ? 140 : 180,
       textAlign: "center",
-      flex: "1 1 180px",
-      margin: 8,
+      flex: "1 1 140px",
+      margin: isMobile ? 4 : 8,
     }}
   >
-    <div style={{ fontSize: 32 }}>{icon}</div>
-    <div style={{ fontSize: 18, color: "#666", marginTop: 8 }}>{label}</div>
+    <div style={{ fontSize: isMobile ? 24 : 32 }}>{icon}</div>
+    <div style={{ 
+      fontSize: isMobile ? 14 : 18, 
+      color: "#666", 
+      marginTop: isMobile ? 4 : 8 
+    }}>
+      {label}
+    </div>
     <div
       style={{
-        fontSize: 28,
+        fontSize: isMobile ? 20 : 28,
         fontWeight: "bold",
         color: "#2E7D32",
-        marginTop: 8,
+        marginTop: isMobile ? 4 : 8,
       }}
     >
       {value}
@@ -108,50 +114,56 @@ const StatCard = ({ label, value, icon }) => (
 /* -------------------------------------------------- */
 /*  Card + Detail Modal                               */
 /* -------------------------------------------------- */
-const Card = ({ item, onClick }) => (
+const Card = ({ item, onClick, isMobile }) => (
   <div
     onClick={() => onClick(item)}
     style={{
       background: "white",
       borderRadius: 12,
       boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-      padding: 20,
-      margin: 8,
-      minWidth: 260,
-      maxWidth: 320,
-      flex: "1 1 260px",
+      padding: isMobile ? 12 : 20,
+      margin: isMobile ? 4 : 8,
+      minWidth: isMobile ? 150 : 260,
+      maxWidth: isMobile ? 180 : 320,
+      flex: isMobile ? "1 1 150px" : "1 1 260px",
       display: "flex",
       flexDirection: "column",
-      gap: 8,
+      gap: isMobile ? 4 : 8,
       cursor: "pointer",
       transition: "transform 0.2s ease-in-out",
     }}
     onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
     onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
   >
-    <div style={{ fontWeight: "bold", fontSize: 18, color: "#2E7D32" }}>
+    <div style={{ 
+      fontWeight: "bold", 
+      fontSize: isMobile ? 14 : 18, 
+      color: "#2E7D32" 
+    }}>
       {item.aanganwaadi_id}
     </div>
-    <div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
       <strong>Name:</strong> {item.name}
-    </div>{" "}
-    {/* changed from Gram */}
-    <div>
+    </div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
       <strong>Block:</strong> {item.block}
     </div>
-    <div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
       <strong>Contact:</strong> {item.contact_number}
     </div>
   </div>
 );
 
-const DetailModal = ({ record, onClose }) => {
+const DetailModal = ({ record, onClose, isMobile }) => {
   if (!record) return null;
 
   // Helper to show each field only if it exists
   const Row = ({ label, value }) =>
     value ? (
-      <div style={{ marginBottom: 10 }}>
+      <div style={{ 
+        marginBottom: 10,
+        fontSize: isMobile ? 14 : 16
+      }}>
         <strong>{label}:</strong> {value}
       </div>
     ) : null;
@@ -166,15 +178,16 @@ const DetailModal = ({ record, onClose }) => {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 2000,
+        padding: isMobile ? "10px" : "20px",
       }}
     >
       <div
         style={{
           background: "#fff",
           borderRadius: 16,
-          padding: 32,
+          padding: isMobile ? 16 : 32,
           width: "90%",
-          maxWidth: 600,
+          maxWidth: isMobile ? "95%" : "600px",
           maxHeight: "90vh",
           overflowY: "auto",
           boxShadow: "0 5px 20px rgba(0,0,0,0.25)",
@@ -185,11 +198,11 @@ const DetailModal = ({ record, onClose }) => {
           onClick={onClose}
           style={{
             position: "absolute",
-            top: 12,
-            right: 16,
+            top: isMobile ? 8 : 12,
+            right: isMobile ? 12 : 16,
             background: "transparent",
             border: "none",
-            fontSize: 28,
+            fontSize: isMobile ? 24 : 28,
             cursor: "pointer",
             lineHeight: 1,
           }}
@@ -197,7 +210,12 @@ const DetailModal = ({ record, onClose }) => {
           &times;
         </button>
 
-        <h2 style={{ marginBottom: 20, color: "#2E7D32" }}>
+        <h2 style={{ 
+          marginBottom: 20, 
+          color: "#2E7D32",
+          fontSize: isMobile ? 18 : 24,
+          marginTop: isMobile ? 20 : 0
+        }}>
           Anganwadi Details
         </h2>
 
@@ -230,7 +248,22 @@ const AnganvadiDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [stats, setStats] = useState({ total: 0, uniqueVillages: 0 });
-  const [selectedRecord, setSelectedRecord] = useState(null); // ← NEW for modal
+  const [selectedRecord, setSelectedRecord] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check if screen is mobile size
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   /* Fetch JSON data */
   useEffect(() => {
@@ -277,64 +310,203 @@ const AnganvadiDashboard = () => {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f5f5f5", display: "flex" }}>
+    <div style={{ 
+      minHeight: "100vh", 
+      background: "#f5f5f5", 
+      display: "flex", 
+      flexDirection: isMobile ? "column" : "row" 
+    }}>
       {/* Sidebar */}
       <aside
         style={{
-          width: 260,
+          width: isMobile ? "100%" : "260px",
+          minHeight: isMobile ? "auto" : "100vh",
           background: "linear-gradient(180deg, #2E7D32, #388e3c)",
           color: "#fff",
           display: "flex",
-          flexDirection: "column",
-          padding: "32px 0",
+          flexDirection: isMobile ? "row" : "column",
+          padding: isMobile ? "16px" : "32px 0",
+          justifyContent: isMobile ? "space-between" : "flex-start",
+          alignItems: isMobile ? "center" : "stretch",
+          flexWrap: isMobile ? "wrap" : "nowrap",
           boxShadow: "2px 0 12px rgba(44,62,80,0.06)",
-          minHeight: "100vh",
         }}
       >
         <div
           style={{
             fontWeight: "bold",
-            fontSize: 24,
+            fontSize: isMobile ? "16px" : "24px",
             textAlign: "center",
-            marginBottom: 24,
+            marginBottom: isMobile ? "0" : "24px",
+            flex: isMobile ? "1" : "none",
           }}
         >
           🌿 Anganvadi Dashboard
         </div>
 
-        <SidebarButton
-          icon={icons.dashboard}
-          label="Back to Student Dashboard"
-          onClick={() => navigate("/dashboard")}
-        />
+        {isMobile ? (
+          // Mobile layout - horizontal buttons
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              onClick={() => navigate("/dashboard")}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                color: "#fff",
+                padding: "8px 12px",
+                fontSize: "12px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Student Dashboard
+            </button>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                color: "#fff",
+                padding: "8px 12px",
+                fontSize: "12px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        ) : (
+          // Desktop layout - vertical sidebar
+          <>
+            <div style={{ padding: "0 20px", marginBottom: 24 }}>
+              <label htmlFor="anganvadi-dashboard-select" style={{ 
+                color: "#fff", 
+                fontSize: 14, 
+                marginBottom: 8, 
+                display: "block",
+                fontWeight: "bold"
+              }}>
+                Choose Dashboard
+              </label>
+              <select
+                id="anganvadi-dashboard-select"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "student") {
+                    navigate("/dashboard");
+                  } else if (value === "anganvadi") {
+                    navigate("/anganvadi-dashboard");
+                  }
+                }}
+                value="anganvadi"
+                style={{ 
+                  width: "100%", 
+                  padding: 12, 
+                  borderRadius: 8,
+                  border: "1px solid #ddd",
+                  fontSize: 16,
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  cursor: "pointer"
+                }}
+              >
+                <option value="student">Student Dashboard</option>
+                <option value="anganvadi">Anganvadi Dashboard</option>
+              </select>
+            </div>
 
-        <div style={{ flex: 1 }} />
+            <SidebarButton
+              icon={icons.dashboard}
+              label="Back to Student Dashboard"
+              onClick={() => navigate("/dashboard")}
+            />
 
-        <SidebarButton
-          icon={icons.logout}
-          label="Logout"
-          onClick={handleLogout}
-        />
+            <div style={{ flex: 1 }} />
+
+            <SidebarButton
+              icon={icons.logout}
+              label="Logout"
+              onClick={handleLogout}
+            />
+          </>
+        )}
       </aside>
 
       {/* Main */}
-      <main style={{ flex: 1, padding: "40px 0", overflowY: "auto" }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
+      <main style={{ 
+        flex: 1, 
+        padding: isMobile ? "20px 0" : "40px 0", 
+        overflowY: "auto" 
+      }}>
+        <div style={{ 
+          maxWidth: 1200, 
+          margin: "0 auto", 
+          padding: isMobile ? "0 16px" : "0 32px" 
+        }}>
+          {/* Dashboard Selector for Mobile */}
+          {isMobile && (
+            <div style={{ 
+              background: "#fff", 
+              borderRadius: 12, 
+              padding: 16, 
+              marginBottom: 20,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+            }}>
+              <label htmlFor="mobile-anganvadi-dashboard-select" style={{ 
+                color: "#333", 
+                fontSize: 14, 
+                marginBottom: 8, 
+                display: "block",
+                fontWeight: "bold"
+              }}>
+                Choose Dashboard
+              </label>
+              <select
+                id="mobile-anganvadi-dashboard-select"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "student") {
+                    navigate("/dashboard");
+                  } else if (value === "anganvadi") {
+                    navigate("/anganvadi-dashboard");
+                  }
+                }}
+                value="anganvadi"
+                style={{ 
+                  width: "100%", 
+                  padding: 12, 
+                  borderRadius: 8,
+                  border: "1px solid #ddd",
+                  fontSize: 16,
+                  backgroundColor: "#fff",
+                  color: "#333",
+                  outline: "none",
+                  cursor: "pointer"
+                }}
+              >
+                <option value="student">Student Dashboard</option>
+                <option value="anganvadi">Anganvadi Dashboard</option>
+              </select>
+            </div>
+          )}
+
           {/* Stats */}
           <div
             style={{
               display: "flex",
-              gap: 16,
+              gap: isMobile ? 8 : 16,
               flexWrap: "wrap",
               justifyContent: "center",
-              marginBottom: 32,
+              marginBottom: isMobile ? 20 : 32,
             }}
           >
-            <StatCard label="Total Anganwadi" value={stats.total} icon="🏫" />
+            <StatCard label="Total Anganwadi" value={stats.total} icon="🏫" isMobile={isMobile} />
             <StatCard
               label="Unique Villages"
               value={stats.uniqueVillages}
               icon="🏡"
+              isMobile={isMobile}
             />
           </div>
 
@@ -344,13 +516,18 @@ const AnganvadiDashboard = () => {
               background: "#fff",
               borderRadius: 16,
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-              padding: 24,
-              marginBottom: 32,
+              padding: isMobile ? 16 : 24,
+              marginBottom: isMobile ? 20 : 32,
             }}
           >
             <form
               onSubmit={(e) => e.preventDefault()}
-              style={{ display: "flex", gap: 12, alignItems: "center" }}
+              style={{ 
+                display: "flex", 
+                gap: 12, 
+                alignItems: "center",
+                flexDirection: isMobile ? "column" : "row"
+              }}
             >
               <svg
                 width="24"
@@ -375,6 +552,7 @@ const AnganvadiDashboard = () => {
                   border: "1px solid #ccc",
                   fontSize: 16,
                   flex: 1,
+                  width: isMobile ? "100%" : "auto"
                 }}
               />
               <button
@@ -387,6 +565,7 @@ const AnganvadiDashboard = () => {
                   border: "none",
                   fontSize: 16,
                   fontWeight: 500,
+                  width: isMobile ? "100%" : "auto"
                 }}
               >
                 Search
@@ -400,21 +579,27 @@ const AnganvadiDashboard = () => {
               background: "#fff",
               borderRadius: 16,
               boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-              padding: 24,
+              padding: isMobile ? 16 : 24,
             }}
           >
-            <h2 style={{ marginBottom: 24 }}>Anganwadi Records</h2>
+            <h2 style={{ marginBottom: isMobile ? 16 : 24 }}>Anganwadi Records</h2>
             {loading ? (
-              <div>Loading…</div>
+              <div style={{ textAlign: "center", padding: "20px" }}>Loading…</div>
             ) : filteredRecords.length === 0 ? (
-              <div>No matching data.</div>
+              <div style={{ textAlign: "center", padding: "20px", color: "#666" }}>No matching data.</div>
             ) : (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
+              <div style={{ 
+                display: "flex", 
+                flexWrap: "wrap", 
+                gap: isMobile ? 8 : 16,
+                justifyContent: "flex-start"
+              }}>
                 {filteredRecords.map((rec, i) => (
                   <Card
                     key={rec.id || i}
                     item={rec}
                     onClick={setSelectedRecord}
+                    isMobile={isMobile}
                   />
                 ))}
               </div>
@@ -427,6 +612,7 @@ const AnganvadiDashboard = () => {
       <DetailModal
         record={selectedRecord}
         onClose={() => setSelectedRecord(null)}
+        isMobile={isMobile}
       />
     </div>
   );
