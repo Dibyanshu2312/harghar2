@@ -167,25 +167,6 @@ const InputIcon = styled.div`
   font-size: 20px;
 `;
 
-const DemoCredentials = styled.div`
-  background: #f5f5f5;
-  padding: 15px;
-  border-radius: 8px;
-  margin: 15px 0;
-  font-size: 13px;
-  
-  .title {
-    font-weight: bold;
-    color: #4CAF50;
-    margin-bottom: 8px;
-  }
-  
-  .cred {
-    margin: 4px 0;
-    color: #666;
-  }
-`;
-
 const LoginButton = styled.button`
   background: #2E7D32;
   color: white;
@@ -450,16 +431,6 @@ const Login = () => {
               />
               <InputIcon>🔒</InputIcon>
             </InputGroup>
-
-            <DemoCredentials>
-              <div className="title">डेमो लॉगिन जानकारी:</div>
-              <div className="cred">• admin555 / admin@222 (एडमिन)</div>
-              <div className="cred">• supervisor / super123 (सुपरवाइजर)</div>
-              <div className="cred">• demo / demo123 (यूजर)</div>
-              <div className="cred">• test / test123 (टेस्ट एडमिन)</div>
-              <div className="cred">• hgm / hgm2024 (HGM एडमिन)</div>
-              <div className="cred">• raipur / raipur123 (रायपुर सुपरवाइजर)</div>
-            </DemoCredentials>
 
             {error && (
               <ConnectionStatus className="error">{error}</ConnectionStatus>

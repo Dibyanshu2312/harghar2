@@ -48,34 +48,48 @@ const SidebarButton = ({ icon, label, onClick }) => (
 );
 
 // Student Card Component
-const StudentCard = ({ student, onClick }) => (
+const StudentCard = ({ student, onClick, isMobile }) => (
   <div
     onClick={() => onClick(student)}
     style={{
       background: "#fff",
       borderRadius: 12,
       boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-      padding: 20,
-      margin: 8,
-      minWidth: 260,
-      maxWidth: 320,
-      flex: "1 1 260px",
+      padding: isMobile ? 12 : 20,
+      margin: isMobile ? 4 : 8,
+      minWidth: isMobile ? 150 : 260,
+      maxWidth: isMobile ? 180 : 320,
+      flex: isMobile ? "1 1 150px" : "1 1 260px",
       display: "flex",
       flexDirection: "column",
-      gap: 8,
+      gap: isMobile ? 4 : 8,
       cursor: "pointer",
       transition: "transform 0.2s",
     }}
     onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
     onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0)")}
   >
-    <div style={{ fontWeight: "bold", fontSize: 18, color: "#2E7D32" }}>{student.childName || student.name || "N/A"}</div>
-    <div>{student.parentName || student.guardian_name || student.father_name || "-"}</div>
-    <div>{student.mobileNumber || student.username || "-"}</div>
-    <div>{student.village || student.address || "-"}</div>
-    <div>Plant Distributed: {student.plantDistributed ? "Yes" : "No"}</div>
+    <div style={{ 
+      fontWeight: "bold", 
+      fontSize: isMobile ? 14 : 18, 
+      color: "#2E7D32" 
+    }}>
+      {student.childName || student.name || "N/A"}
+    </div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
+      {student.parentName || student.guardian_name || student.father_name || "-"}
+    </div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
+      {student.mobileNumber || student.username || "-"}
+    </div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
+      {student.village || student.address || "-"}
+    </div>
+    <div style={{ fontSize: isMobile ? 12 : 14 }}>
+      Plant Distributed: {student.plantDistributed ? "Yes" : "No"}
+    </div>
     {student.registrationDate && (
-      <div>
+      <div style={{ fontSize: isMobile ? 12 : 14 }}>
         <strong>Registered:</strong> {student.registrationDate}
       </div>
     )}
@@ -83,27 +97,40 @@ const StudentCard = ({ student, onClick }) => (
 );
 
 // Statistic Card Component
-const StatCard = ({ label, value, icon }) => (
+const StatCard = ({ label, value, icon, isMobile }) => (
   <div
     style={{
       background: "#fff",
       borderRadius: 16,
-      padding: 32,
+      padding: isMobile ? 16 : 32,
       boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-      minWidth: 180,
+      minWidth: isMobile ? 140 : 180,
       textAlign: "center",
-      flex: "1 1 180px",
-      margin: 8,
+      flex: "1 1 140px",
+      margin: isMobile ? 4 : 8,
     }}
   >
-    <div style={{ fontSize: 32 }}>{icon}</div>
-    <div style={{ fontSize: 18, color: "#666", marginTop: 8 }}>{label}</div>
-    <div style={{ fontSize: 28, fontWeight: "bold", color: "#2E7D32", marginTop: 8 }}>{value}</div>
+    <div style={{ fontSize: isMobile ? 24 : 32 }}>{icon}</div>
+    <div style={{ 
+      fontSize: isMobile ? 14 : 18, 
+      color: "#666", 
+      marginTop: isMobile ? 4 : 8 
+    }}>
+      {label}
+    </div>
+    <div style={{ 
+      fontSize: isMobile ? 20 : 28, 
+      fontWeight: "bold", 
+      color: "#2E7D32", 
+      marginTop: isMobile ? 4 : 8 
+    }}>
+      {value}
+    </div>
   </div>
 );
 
 // Registration Modal Component
-const RegisterModal = ({ open, onClose }) => {
+const RegisterModal = ({ open, onClose, isMobile }) => {
   if (!open) return null;
   return (
     <div
@@ -115,36 +142,36 @@ const RegisterModal = ({ open, onClose }) => {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 2000,
+        padding: isMobile ? "10px" : "20px",
       }}
     >
       <div
         style={{
           background: "#fff",
           borderRadius: 16,
-          padding: 32,
+          padding: isMobile ? 16 : 32,
           width: "90%",
-          maxWidth: 800,
-          maxHeight: "99vh",
+          maxWidth: isMobile ? "95%" : "800px",
+          maxHeight: "95vh",
           overflowY: "auto",
           position: "relative",
         }}
       >
         <button
           onClick={onClose}
-          aria-label="Close registration form" // Added for accessibility
+          aria-label="Close registration form"
           style={{
             position: "absolute",
-            top: 12,
-            right: 16,
+            top: isMobile ? 8 : 12,
+            right: isMobile ? 12 : 16,
             border: "none",
             background: "transparent",
-            fontSize: 28,
+            fontSize: isMobile ? 24 : 28,
             cursor: "pointer",
           }}
         >
           &times;
         </button>
-        {/* AnganwadiAdd component for the registration form */}
         <AnganwadiAdd />
       </div>
     </div>
@@ -152,7 +179,7 @@ const RegisterModal = ({ open, onClose }) => {
 };
 
 // Student Detail Modal Component
-const StudentDetailModal = ({ student, onClose }) => {
+const StudentDetailModal = ({ student, onClose, isMobile }) => {
   if (!student) return null;
   return (
     <div
@@ -164,15 +191,16 @@ const StudentDetailModal = ({ student, onClose }) => {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 2000,
+        padding: isMobile ? "10px" : "20px",
       }}
     >
       <div
         style={{
           background: "#fff",
           borderRadius: 16,
-          padding: 32,
+          padding: isMobile ? 16 : 32,
           width: "90%",
-          maxWidth: 600,
+          maxWidth: isMobile ? "95%" : "600px",
           maxHeight: "90vh",
           overflowY: "auto",
           position: "relative",
@@ -180,64 +208,44 @@ const StudentDetailModal = ({ student, onClose }) => {
       >
         <button
           onClick={onClose}
-          aria-label="Close student details" // Added for accessibility
+          aria-label="Close student details"
           style={{
             position: "absolute",
-            top: 12,
-            right: 16,
+            top: isMobile ? 8 : 12,
+            right: isMobile ? 12 : 16,
             border: "none",
             background: "transparent",
-            fontSize: 28,
+            fontSize: isMobile ? 24 : 28,
             cursor: "pointer",
           }}
         >
           &times;
         </button>
-        <h2 style={{ marginBottom: 16 }}>Student Details</h2>
-        {/* Dynamically render all key-value pairs from the student object */}
+        <h2 style={{ 
+          marginBottom: 16, 
+          fontSize: isMobile ? 18 : 24,
+          marginTop: isMobile ? 20 : 0
+        }}>
+          Student Details
+        </h2>
         {Object.entries(student).map(([key, value]) => {
-          // Only render if value is not null/undefined, or if it's a boolean (which could be false)
           if (value !== null && value !== undefined && value !== '') {
-            // Format the key for display (e.g., "childName" -> "Child Name")
             const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
             return (
-              <div key={key} style={{ marginBottom: '8px' }}>
+              <div key={key} style={{ 
+                marginBottom: '8px',
+                fontSize: isMobile ? 14 : 16
+              }}>
                 <strong>{formattedKey}:</strong> {String(value)}
               </div>
             );
           }
-          return null; // Don't render empty or null fields
+          return null;
         })}
       </div>
     </div>
   );
 };
-
-// Message for restricted view on smaller screens
-const RestrictedViewMessage = () => (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      minHeight: "100vh",
-      background: "#f5f5f5",
-      textAlign: "center",
-      padding: "20px",
-      boxSizing: "border-box",
-    }}
-  >
-    <h2 style={{ color: "#D32F2F", marginBottom: "20px" }}>
-      <span role="img" aria-label="Warning">⚠️</span> Optimized for Larger Screens
-    </h2>
-    <p style={{ fontSize: "18px", lineHeight: "1.6", maxWidth: "500px" }}>
-      This dashboard provides a richer experience on desktop or larger tablet devices.
-      Please access it from a personal computer for full functionality.
-    </p>
-  </div>
-);
-
 
 // Main Dashboard Component
 const Dashboard = () => {
@@ -250,24 +258,22 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
-  const [isSmallScreen, setIsSmallScreen] = useState(false); // New state for screen size
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Threshold for small screen (e.g., typical phone width)
-  const SMALL_SCREEN_BREAKPOINT = 768; // You can adjust this value
-
-  // Function to check screen size
-  const checkScreenSize = useCallback(() => {
-    setIsSmallScreen(window.innerWidth <= SMALL_SCREEN_BREAKPOINT);
-  }, []);
-
-  // Effect to set up and clean up resize listener
+  // Check if screen is mobile size
   useEffect(() => {
-    checkScreenSize(); // Initial check on mount
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
+
     return () => {
       window.removeEventListener('resize', checkScreenSize);
     };
-  }, [checkScreenSize]);
+  }, []);
+
 
 
   // Function to fetch student data
@@ -360,106 +366,242 @@ const Dashboard = () => {
   }, [navigate]);
 
   return (
-    // Conditional rendering based on screen size
-    isSmallScreen ? (
-      <RestrictedViewMessage />
-    ) : (
-      <div style={{ minHeight: "100vh", background: "#f5f5f5", display: "flex" }}>
-        {/* Sidebar */}
-        <aside
-          style={{
-            width: 260,
-            background: "linear-gradient(180deg,#2E7D32,#388e3c)",
-            color: "#fff",
-            display: "flex",
-            flexDirection: "column",
-            padding: "32px 0",
-          }}
-        >
-          <div style={{ fontWeight: "bold", fontSize: 24, textAlign: "center", marginBottom: 24 }}>🌳 हर घर मुंगा</div>
-          <div style={{ padding: "0 20px", marginBottom: 24 }}>
-            <label htmlFor="dashboard-select" style={{ color: "#fff", fontSize: 14, marginBottom: 6, display: "block" }}>
-              Choose Dashboard
-            </label>
-            <select
-              id="dashboard-select"
-              onChange={handleDashboardSelect}
-              defaultValue="student"
-              style={{ width: "100%", padding: 12, borderRadius: 8 }}
+    <div style={{ 
+      minHeight: "100vh", 
+      background: "#f5f5f5", 
+      display: "flex", 
+      flexDirection: isMobile ? "column" : "row" 
+    }}>
+      {/* Sidebar */}
+      <aside
+        style={{
+          width: isMobile ? "100%" : "260px",
+          minHeight: isMobile ? "auto" : "100vh",
+          background: "linear-gradient(180deg,#2E7D32,#388e3c)",
+          color: "#fff",
+          display: "flex",
+          flexDirection: isMobile ? "row" : "column",
+          padding: isMobile ? "16px" : "32px 0",
+          justifyContent: isMobile ? "space-between" : "flex-start",
+          alignItems: isMobile ? "center" : "stretch",
+          flexWrap: isMobile ? "wrap" : "nowrap",
+        }}
+      >
+        <div style={{ 
+          fontWeight: "bold", 
+          fontSize: isMobile ? "18px" : "24px", 
+          textAlign: "center", 
+          marginBottom: isMobile ? "0" : "24px",
+          flex: isMobile ? "1" : "none"
+        }}>
+          🌳 हर घर मुंगा
+        </div>
+        
+        {isMobile ? (
+          // Mobile layout - horizontal buttons
+          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <button
+              onClick={() => setShowRegisterModal(true)}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                color: "#fff",
+                padding: "8px 12px",
+                fontSize: "14px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
             >
-              <option value="student">Student Dashboard</option>
-              <option value="anganvadi">Anganvadi Dashboard</option>
-            </select>
+              Register
+            </button>
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "rgba(255,255,255,0.2)",
+                border: "none",
+                color: "#fff",
+                padding: "8px 12px",
+                fontSize: "14px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Logout
+            </button>
           </div>
-          <SidebarButton icon={icons.register} label="Register" onClick={() => setShowRegisterModal(true)} />
-          <div style={{ flex: 1 }} /> {/* Spacer */}
-          <SidebarButton icon={icons.logout} label="Logout" onClick={handleLogout} />
-        </aside>
-
-        {/* Main Content Area */}
-        <main style={{ flex: 1, padding: "40px 0", overflowY: "auto", background: "#f5f5f5" }}>
-          <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
-            {/* Stat Cards */}
-            <div style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center", marginBottom: 32 }}>
-              <StatCard label="Total Students" value={stats.total} icon="👨‍🎓" />
-              <StatCard label="Unique Villages" value={stats.uniqueVillages} icon="🏡" />
+        ) : (
+          // Desktop layout - vertical sidebar
+          <>
+            <div style={{ padding: "0 20px", marginBottom: 24 }}>
+              <label htmlFor="dashboard-select" style={{ color: "#fff", fontSize: 14, marginBottom: 6, display: "block" }}>
+                Choose Dashboard
+              </label>
+              <select
+                id="dashboard-select"
+                onChange={handleDashboardSelect}
+                defaultValue="student"
+                style={{ width: "100%", padding: 12, borderRadius: 8 }}
+              >
+                <option value="student">Student Dashboard</option>
+                <option value="anganvadi">Anganvadi Dashboard</option>
+              </select>
             </div>
+            <SidebarButton icon={icons.register} label="Register" onClick={() => setShowRegisterModal(true)} />
+            <div style={{ flex: 1 }} />
+            <SidebarButton icon={icons.logout} label="Logout" onClick={handleLogout} />
+          </>
+        )}
+      </aside>
 
-            {/* Search Bar */}
-            <div style={{ background: "#fff", borderRadius: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: 24, marginBottom: 32 }}>
-              <form onSubmit={(e) => e.preventDefault()} style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                <svg width="24" height="24" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                </svg>
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by name or mobile number"
-                  style={{ padding: 12, borderRadius: 8, border: "1px solid #ccc", fontSize: 16, flex: 1 }}
-                  aria-label="Search students"
-                />
-                <button
-                  type="submit"
-                  style={{ padding: "12px 28px", borderRadius: 8, background: "#4CAF50", color: "#fff", border: "none", fontSize: 16 }}
-                >
-                  Search
-                </button>
-              </form>
+      {/* Main Content Area */}
+      <main style={{ 
+        flex: 1, 
+        padding: isMobile ? "20px 0" : "40px 0", 
+        overflowY: "auto", 
+        background: "#f5f5f5" 
+      }}>
+        <div style={{ 
+          maxWidth: 1200, 
+          margin: "0 auto", 
+          padding: isMobile ? "0 16px" : "0 32px" 
+        }}>
+          {/* Dashboard Selector for Mobile */}
+          {isMobile && (
+            <div style={{ 
+              background: "#fff", 
+              borderRadius: 12, 
+              padding: 16, 
+              marginBottom: 20,
+              boxShadow: "0 2px 8px rgba(0,0,0,0.08)"
+            }}>
+              <label htmlFor="mobile-dashboard-select" style={{ 
+                color: "#333", 
+                fontSize: 14, 
+                marginBottom: 8, 
+                display: "block",
+                fontWeight: "bold"
+              }}>
+                Choose Dashboard
+              </label>
+              <select
+                id="mobile-dashboard-select"
+                onChange={handleDashboardSelect}
+                defaultValue="student"
+                style={{ 
+                  width: "100%", 
+                  padding: 12, 
+                  borderRadius: 8,
+                  border: "1px solid #ddd",
+                  fontSize: 16
+                }}
+              >
+                <option value="student">Student Dashboard</option>
+                <option value="anganvadi">Anganvadi Dashboard</option>
+              </select>
             </div>
+          )}
 
-            {/* Registered Students Section */}
-            <div style={{ background: "#fff", borderRadius: 16, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", padding: 24 }}>
-              <h2 style={{ marginBottom: 24 }}>Registered Students</h2>
-              {loading ? (
-                <div style={{ textAlign: "center", padding: "20px" }}>Loading student data...</div>
-              ) : filteredStudents.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "20px", color: "#666" }}>No matching student data found.</div>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: 16,
-                    justifyContent: "flex-start", // This is the crucial change for left alignment
-                  }}
-                >
-                  {filteredStudents.map((s, i) => (
-                    // Use a more stable key if available, like a unique ID from the data
-                    <StudentCard key={s.id || s.childName + s.mobileNumber + i} student={s} onClick={setSelectedStudent} />
-                  ))}
-                </div>
-              )}
-            </div>
+          {/* Stat Cards */}
+          <div style={{ 
+            display: "flex", 
+            gap: isMobile ? 8 : 16, 
+            flexWrap: "wrap", 
+            justifyContent: "center", 
+            marginBottom: isMobile ? 20 : 32 
+          }}>
+            <StatCard label="Total Students" value={stats.total} icon="👨‍🎓" isMobile={isMobile} />
+            <StatCard label="Unique Villages" value={stats.uniqueVillages} icon="🏡" isMobile={isMobile} />
           </div>
-        </main>
 
-        {/* Modals */}
-        <RegisterModal open={showRegisterModal} onClose={() => setShowRegisterModal(false)} />
-        <StudentDetailModal student={selectedStudent} onClose={() => setSelectedStudent(null)} />
-      </div>
-    )
+          {/* Search Bar */}
+          <div style={{ 
+            background: "#fff", 
+            borderRadius: 16, 
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)", 
+            padding: isMobile ? 16 : 24, 
+            marginBottom: isMobile ? 20 : 32 
+          }}>
+            <form onSubmit={(e) => e.preventDefault()} style={{ 
+              display: "flex", 
+              gap: 12, 
+              alignItems: "center",
+              flexDirection: isMobile ? "column" : "row"
+            }}>
+              <svg width="24" height="24" fill="none" stroke="#2E7D32" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by name or mobile number"
+                style={{ 
+                  padding: 12, 
+                  borderRadius: 8, 
+                  border: "1px solid #ccc", 
+                  fontSize: 16, 
+                  flex: 1,
+                  width: isMobile ? "100%" : "auto"
+                }}
+                aria-label="Search students"
+              />
+              <button
+                type="submit"
+                style={{ 
+                  padding: "12px 28px", 
+                  borderRadius: 8, 
+                  background: "#4CAF50", 
+                  color: "#fff", 
+                  border: "none", 
+                  fontSize: 16,
+                  width: isMobile ? "100%" : "auto"
+                }}
+              >
+                Search
+              </button>
+            </form>
+          </div>
+
+          {/* Registered Students Section */}
+          <div style={{ 
+            background: "#fff", 
+            borderRadius: 16, 
+            boxShadow: "0 2px 8px rgba(0,0,0,0.08)", 
+            padding: isMobile ? 16 : 24 
+          }}>
+            <h2 style={{ marginBottom: isMobile ? 16 : 24 }}>Registered Students</h2>
+            {loading ? (
+              <div style={{ textAlign: "center", padding: "20px" }}>Loading student data...</div>
+            ) : filteredStudents.length === 0 ? (
+              <div style={{ textAlign: "center", padding: "20px", color: "#666" }}>No matching student data found.</div>
+            ) : (
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: isMobile ? 8 : 16,
+                  justifyContent: "flex-start",
+                }}
+              >
+                {filteredStudents.map((s, i) => (
+                  <StudentCard 
+                    key={s.id || s.childName + s.mobileNumber + i} 
+                    student={s} 
+                    onClick={setSelectedStudent} 
+                    isMobile={isMobile}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+
+      {/* Modals */}
+      <RegisterModal open={showRegisterModal} onClose={() => setShowRegisterModal(false)} isMobile={isMobile} />
+      <StudentDetailModal student={selectedStudent} onClose={() => setSelectedStudent(null)} isMobile={isMobile} />
+    </div>
   );
 };
 
